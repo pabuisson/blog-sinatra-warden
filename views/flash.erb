@@ -1,0 +1,7 @@
+<% [:error, :success].each do |name| %>
+  <% if flash.has?(name) %>
+    <div class="flash <%= "flash-#{ name }" %>">
+      <%= flash[name] %>
+    </div>
+  <% end %>
+<% end %>
