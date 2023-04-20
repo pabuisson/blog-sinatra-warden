@@ -1,5 +1,5 @@
-require 'sinatra/activerecord'
 require 'bcrypt'
+require 'sinatra/activerecord'
 
 # https://github.com/codahale/bcrypt-ruby
 class User < ActiveRecord::Base

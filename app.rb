@@ -1,14 +1,12 @@
-require 'sinatra'
-require 'sinatra/reloader'
-require 'sinatra/activerecord'
-require 'warden'
+require 'colorize' # Just to add fancy colour in the server log
 require 'rack-flash'
+require 'sinatra'
+require 'sinatra/activerecord'
+# require 'sinatra/reloader'
+require 'warden'
 require './model.rb'
 
-# Just to add fancy colour in the server log
-require 'colorize'
-
-set :database, {adapter: "sqlite3", database: "db/foo.sqlite3"}
+set :database, {adapter: 'sqlite3', database: 'db/foo.sqlite3'}
 
 # NOTE: don't do this in production!! use a `secret` option from an environment variable
 #       see this for more details: https://martinfowler.com/articles/session-secret.html
@@ -23,12 +21,12 @@ use Warden::Manager do |config|
   # Tell Warden how to take what we've stored in the session and get a User from that information.
   config.serialize_from_session{ |id| User.find(id) }
 
-  # "strategies" is an array of named methods with which to attempt authentication. We have to define this later.
+  # 'strategies' is an array of named methods with which to attempt authentication. We have to define this later.
   # The action is a route to send the user to when warden.authenticate! returns a false answer. We'll show this route below.
   config.scope_defaults :default, strategies: [:password], action: '/unauthenticated'
 
   # When a user tries to log in and cannot, this specifies the app to send the user to.
-  # Here I'm using classic sinatra application style, hence "Sinatra::Application". If you're
+  # Here I'm using classic sinatra application style, hence 'Sinatra::Application'. If you're
   # using the modular sinatra style, then you'd use `self` or the class name of your app
   config.failure_app = Sinatra::Application
 end
@@ -36,20 +34,20 @@ end
 
 Warden::Strategies.add(:password) do
   def valid?
-    puts "(Warden::Strategies) valid?".colorize(:blue)
+    puts '(Warden::Strategies) valid?'.colorize(:blue)
     params['username'] && params['password']
   end
 
   def authenticate!
-    puts "(Warden::Strategies) authenticate!".colorize(:blue)
+    puts '(Warden::Strategies) authenticate!'.colorize(:blue)
     user = User.find_by(username: params['username'])
 
     if user && user.authenticate(params['password'])
-      puts "(Warden::Strategies) user present and authenticate returns true".colorize(:green)
+      puts '(Warden::Strategies) user present and authenticate returns true'.colorize(:green)
       success!(user)
     else
-      puts "(Warden::Strategies) could not authenticate".colorize(:red)
-      fail!("Could not log in")
+      puts '(Warden::Strategies) could not authenticate'.colorize(:red)
+      fail!('Could not log in')
     end
   end
 end
@@ -91,13 +89,13 @@ get '/login' do
   erb :login
 end
 
-# The login form submits a request to this "POST login" route
+# The login form submits a request to this 'POST login' route
 # Warden tries to authenticate based on the params username and password
 # If authentication is successful, user is redirected. If authentication
 # fails, it's handled in the strategy `authenticate!` method.
 post '/login' do
   env['warden'].authenticate!
-  flash[:success] = "Logged in!"
+  flash[:success] = 'Logged in!'
 
   redirect_to = session[:return_to] || '/protected'
   puts "logged in, redirect to #{ redirect_to }".colorize(:green)
@@ -113,10 +111,10 @@ get '/logout' do
 end
 
 post '/unauthenticated' do
-  puts "POST /unauthenticated".colorize(:red)
+  puts 'POST /unauthenticated'.colorize(:red)
   session[:return_to] = env['warden.options'][:attempted_path]
 
-  flash[:error] = env['warden'].message || "You must log in"
+  flash[:error] = env['warden'].message || 'You must log in'
   redirect '/login'
 end
 
