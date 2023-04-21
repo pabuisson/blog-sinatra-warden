@@ -1,25 +1,23 @@
 require 'colorize' # Just to add fancy colour in the server log
 require 'rack-flash'
 require 'sinatra'
+
+set :database, { adapter: 'sqlite3', database: 'db/foo.sqlite3' }
+
 require 'sinatra/activerecord'
-# require 'sinatra/reloader'
 require 'warden'
-require './model.rb'
+require_relative 'model'
 
-set :database, {adapter: 'sqlite3', database: 'db/foo.sqlite3'}
-
-# NOTE: don't do this in production!! use a `secret` option from an environment variable
-#       see this for more details: https://martinfowler.com/articles/session-secret.html
-use Rack::Session::Cookie
+use Rack::Session::Pool, secret: SecureRandom.uuid
 
 use Rack::Flash
 
 use Warden::Manager do |config|
   # Tell Warden how to save our User info into a session.  Sessions can only take strings,
   # not Ruby code, we'll store the User's `id`
-  config.serialize_into_session{ |user| user.id }
+  config.serialize_into_session(&:id)
   # Tell Warden how to take what we've stored in the session and get a User from that information.
-  config.serialize_from_session{ |id| User.find(id) }
+  config.serialize_from_session { |id| User.find(id) }
 
   # 'strategies' is an array of named methods with which to attempt authentication. We have to define this later.
   # The action is a route to send the user to when warden.authenticate! returns a false answer. We'll show this route below.
