@@ -1,1 +1,11 @@
 db/*.sqlite3
+Gemfile.lock
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/exe/
+/pkg/
+/spec/reports/
+
