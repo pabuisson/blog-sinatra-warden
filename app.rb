@@ -8,6 +8,7 @@ require_relative 'model'
 
 set :database_file, 'config/database.yml'
 
+enable :sessions
 use Rack::Session::Cookie, secret: SecureRandom.uuid
 
 use Rack::Flash
@@ -53,7 +54,7 @@ end
 # Without this, failed calls to authenticate! would redirect based on the method of the request
 # which means we'd have to implement GET /unauthenticated, POST /unauthenticated, etc.
 # Doing this, we'll just deal with one route of failed authentication -> POST /unauthenticated
-Warden::Manager.before_failure do |env, opts|
+Warden::Manager.before_failure do |env, _opts|
   env['REQUEST_METHOD'] = 'POST'
 end
 
@@ -93,9 +94,9 @@ post '/login' do
   flash[:success] = 'Logged in!'
 
   redirect_to = session[:return_to] || '/protected'
-  puts "logged in, redirect to #{ redirect_to }".colorize(:green)
+  puts "logged in, redirect to #{redirect_to}".colorize(:green)
 
-  redirect( redirect_to )
+  redirect redirect_to
 end
 
 get '/logout' do
