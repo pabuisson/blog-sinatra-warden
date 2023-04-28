@@ -10,10 +10,12 @@ I suppose you have a functionnal Ruby installation here.
 
 ```
 $ bundle install
+
 $ bundle exec rake db:create
 $ bundle exec rake db:migrate
 $ bundle exec rake db:seed
-$ ruby app.rb
+
+$ rackup
 ```
 
 And then you can try and login with user `admin` and password `admin` :)

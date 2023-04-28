@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "rake"
+gem 'rake'
+gem 'puma'
 
-gem "sinatra"
-gem "sinatra-contrib"
-gem "warden"
-gem "sinatra-activerecord"
-gem "sqlite3"
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'warden'
+
+gem 'sinatra-activerecord'
+gem 'sqlite3'
+
 gem 'rack-flash3'
 gem 'bcrypt'
 
-gem "colorize"
+gem 'colorize'
