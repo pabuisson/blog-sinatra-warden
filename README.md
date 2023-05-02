@@ -15,7 +15,7 @@ $ bundle exec rake db:create
 $ bundle exec rake db:migrate
 $ bundle exec rake db:seed
 
-$ rackup
+$ ruby app.rb
 ```
 
 And then you can try and login with user `admin` and password `admin` :)
